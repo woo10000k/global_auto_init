@@ -1,0 +1,88 @@
+# Robot Configuration for Auto-Initialization
+# Algorithm: ScanContext + RANSAC/FPFH
+
+# ROS Configuration
+ros:
+  input_topic: "/ouster/points"
+  map_frame: "map_3d"
+  base_frame: "base_link_3d"
+
+# Map Configuration
+map:
+  # Launch file path (to read map_3d arg)
+  launch_file: "/path/to/localization.launch"
+  # Map PCD file directory (.pcd, .npy files location)
+  map_directory: "/path/to/maps"
+
+# Database auto-generation settings
+database:
+  # waypoints.csv, connection.csv location
+  waypoint_data_path: "/path/to/waypoints"
+  # Floors to use
+  floors: [0, 1]
+  # Sampling interval (m)
+  sampling_distance: 0.2
+  # Lateral sampling distance (m), 0 = center only
+  lateral_distance: 0.0
+  # Use connection.csv (recommended: true)
+  use_connections: true
+
+# ScanContext parameters
+scan_context:
+  num_sectors: 120
+  num_rings: 40
+  max_radius: 80.0
+  # SC Top-K: backup candidates for retry
+  # Primary (Top-1) always runs, on failure try Top-2, 3, ...
+  top_k: 3
+
+# Retry settings
+retry:
+  # Max retry count (excluding primary attempt)
+  # 3 = total 4 attempts (1 primary + 3 retries)
+  max_retries: 3
+
+# Registration parameters (RANSAC + FPFH)
+registration:
+  # Downsampling voxel size (m)
+  voxel_size: 0.5
+  # Map crop radius around initial guess (m)
+  fov_crop: 34.0
+  # RANSAC correspondence distance threshold (m)
+  max_correspondence_distance: 2.0
+  # Minimum fitness score for success
+  fitness_threshold: 0.00
+
+# Timing
+timing:
+  enable_timing: true
+  print_timing: true
+
+# Localization trigger settings
+localization:
+  # Command to execute after publishing /initialpose
+  # The command should output "success: True/False" format
+  # Examples:
+  #   - "loc_init"          (bash alias or script)
+  #   - Custom script that calls your localization system
+  command: "loc_init"
+  # Floor info (passed as environment variable LOC_FLOOR if needed)
+  floor: 0
+
+# System settings
+system:
+  num_threads: 9
+
+# Multi-start RANSAC settings
+# Try RANSAC at multiple positions around SC result (±offset)
+ransac:
+  # Enable multi-start
+  enable_multi_start: true
+  # Number of trials: 1=single, 5=4dir+center, 9=8dir+center
+  num_trials: 9
+  # Primary offset distance (m) - 4 cardinal + 4 diagonal
+  trial_offset: 2.0
+  # Secondary offset distance (m) - used when num_trials >= 10
+  trial_offset_small: 1.0
+  # Parallel execution (true: use ThreadPool)
+  parallel_trials: true

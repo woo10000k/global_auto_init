@@ -1,0 +1,54 @@
+# Build artifacts
+build/
+*.o
+*.a
+*.so
+*.dylib
+
+# Data files (large datasets, map files)
+data/
+
+# Documentation (internal development docs)
+docs/
+
+# Development files
+.claude/
+scripts/
+test_reports/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+
+# Executables
+*.exe
+*.out
+
+# Tests (development only)
+tests/
+
+# Test outputs
+Testing/
+test_results/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Log files
+*.log
+
+# Core dumps
+core
+core.*
